@@ -1,0 +1,47 @@
+{
+  "name": "kittik-animation-basic",
+  "version": "0.0.0-semantic-release",
+  "description": "Basic animation which is needed for creating other animation",
+  "main": "lib/Basic.js",
+  "author": "ghaiklor",
+  "bugs": {
+    "url": "https://github.com/kittikjs/animation-basic/issues"
+  },
+  "homepage": "https://github.com/kittikjs/animation-basic#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kittikjs/animation-basic.git"
+  },
+  "license": "MIT",
+  "scripts": {
+    "compile": "babel src --out-dir lib",
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
+    "prepublish": "npm run compile",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "test": "babel-node ./node_modules/.bin/isparta cover _mocha"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "babel-cli": "6.3.13",
+    "babel-preset-es2015-node4": "2.0.2",
+    "babel-preset-stage-0": "6.3.13",
+    "chai": "3.4.1",
+    "coveralls": "2.11.4",
+    "cz-conventional-changelog": "1.1.5",
+    "isparta": "4.0.0",
+    "mocha": "2.3.4",
+    "sinon": "1.17.2",
+    "semantic-release": "^4.3.5"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "publishConfig": {
+    "tag": "latest"
+  },
+  "release": {
+    "branch": "master"
+  }
+}
