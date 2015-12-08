@@ -20,6 +20,9 @@ export default class Basic extends Transform {
   _options = {};
 
   /**
+   * Initializes animation.
+   * Make sure that animation is disabled when instantiating.
+   *
    * @constructor
    */
   constructor() {

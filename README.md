@@ -29,10 +29,6 @@ Extend and export your animation:
 import Animation from 'kittik-animation-basic';
 
 export default class Print extends Animation {
-  constructor(...args) {
-    super(...args);
-  }
-
   animate(chunk, cb) {
     // Do your animation here and trigger cb
     cb(chunk);
