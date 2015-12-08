@@ -10,10 +10,6 @@ import { Transform } from 'stream';
  * import Animation from 'kittik-animation-basic';
  *
  * export default class Print extends Animation {
- *   constructor(...args) {
- *     super(...args);
- *   }
- *
  *   animate(chunk, cb) {
  *     // Do your logic here for animate the shape rendering and call cb
  *     cb(chunk);
@@ -21,16 +17,47 @@ import { Transform } from 'stream';
  * };
  */
 export default class Basic extends Transform {
-  _enabled = false;
+  _options = {};
 
   /**
-   * Constructor is responsible for initializing base properties.
-   * Don't forgot to call `super(...args)` when extending from this class.
-   *
    * @constructor
    */
   constructor() {
     super();
+
+    this.disable();
+  }
+
+  /**
+   * Get option value.
+   *
+   * @param {String} path Path can be set with dot-notation
+   * @returns {*}
+   */
+  get(path) {
+    return path.split('.').reduce((obj, key) => obj[key], this._options);
+  }
+
+  /**
+   * Set new option value.
+   *
+   * @param {String} path Path can be set with dot-notation
+   * @param {*} value Value that need to be written to the options object
+   * @returns {Basic}
+   */
+  set(path, value) {
+    let obj = this._options;
+    let tags = path.split('.');
+    let len = tags.length - 1;
+
+    for (let i = 0; i < len; i++) {
+      if (typeof obj[tags[i]] === 'undefined') obj[tags[i]] = {};
+      obj = obj[tags[i]];
+    }
+
+    obj[tags[len]] = value;
+
+    return this;
   }
 
   /**
@@ -39,7 +66,7 @@ export default class Basic extends Transform {
    * @returns {Basic}
    */
   enable() {
-    this._enabled = true;
+    this.set('enabled', true);
     return this;
   }
 
@@ -49,7 +76,7 @@ export default class Basic extends Transform {
    * @returns {Basic}
    */
   disable() {
-    this._enabled = false;
+    this.set('enabled', false);
     return this;
   }
 
@@ -59,7 +86,7 @@ export default class Basic extends Transform {
    * @returns {Boolean}
    */
   isEnabled() {
-    return !!this._enabled;
+    return !!this.get('enabled');
   }
 
   /**
@@ -68,7 +95,7 @@ export default class Basic extends Transform {
    * @returns {Boolean}
    */
   isDisabled() {
-    return !this._enabled;
+    return !this.get('enabled');
   }
 
   /**
@@ -89,9 +116,9 @@ export default class Basic extends Transform {
   /**
    * Process each chunk of control symbols before piping into next item in the animations chain.
    *
-   * @param chunk
-   * @param encoding
-   * @param cb
+   * @param {Buffer|String} chunk
+   * @param {String} encoding
+   * @param {Function} cb
    * @private
    */
   _transform(chunk, encoding, cb) {
