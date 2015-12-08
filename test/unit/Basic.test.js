@@ -3,16 +3,25 @@ import sinon from 'sinon';
 import Animation from '../../src/Basic';
 
 describe('Animation::Basic', () => {
+  it('Should properly get/set from options object', () => {
+    let animation = new Animation();
+    assert.notOk(animation.get('enabled'));
+    assert.instanceOf(animation.set('foo.bar', true), Animation);
+    assert.ok(animation.get('foo.bar'));
+    assert.instanceOf(animation.set('foo.bar', false), Animation);
+    assert.notOk(animation.get('foo.bar'), false);
+  });
+
   it('Should properly enable animation', () => {
     let animation = new Animation();
     assert.instanceOf(animation.enable(), Animation);
-    assert.ok(animation._enabled);
+    assert.ok(animation.get('enabled'));
   });
 
   it('Should properly disable animation', () => {
     let animation = new Animation();
     assert.instanceOf(animation.disable(), Animation);
-    assert.notOk(animation._enabled);
+    assert.notOk(animation.get('enabled'));
   });
 
   it('Should properly check if animation is enabled', () => {
