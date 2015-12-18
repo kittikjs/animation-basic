@@ -1,5 +1,3 @@
-import { Transform } from 'stream';
-
 /**
  * Base class for creating other animations.
  * Each custom animation must extends from this class.
@@ -16,17 +14,15 @@ import { Transform } from 'stream';
  *   }
  * };
  */
-export default class Basic extends Transform {
-  _options = {};
-
+export default class Basic {
   /**
    * Initializes animation.
    * Make sure that animation is disabled when instantiating.
    *
    * @constructor
    */
-  constructor() {
-    super();
+  constructor(options) {
+    this._options = options;
 
     this.disable();
   }
