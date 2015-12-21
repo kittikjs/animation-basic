@@ -137,7 +137,7 @@ export const EASING = {
     return c / 2 * ((t -= 2) * t * (((s *= (1.525)) + 1) * t + s) + 2) + b;
   },
 
-  inBounce: (t, b, c, d) => c - this.OutBounce(x, d - t, 0, c, d) + b,
+  inBounce: (t, b, c, d) => c - EASING.outBounce(d - t, 0, c, d) + b,
 
   outBounce: (t, b, c, d) => {
     if ((t /= d) < (1 / 2.75)) {
@@ -152,7 +152,7 @@ export const EASING = {
   },
 
   inOutBounce: (t, b, c, d) => {
-    if (t < d / 2) return this.inBounce(x, t * 2, 0, c, d) * .5 + b;
-    return this.outBounce(x, t * 2 - d, 0, c, d) * .5 + c * .5 + b;
+    if (t < d / 2) return EASING.inBounce(t * 2, 0, c, d) * .5 + b;
+    return EASING.outBounce(t * 2 - d, 0, c, d) * .5 + c * .5 + b;
   }
 };
