@@ -1,30 +1,28 @@
+import { EASING } from './easing';
+
+export * from './easing';
+
 /**
  * Base class for creating other animations.
  * Each custom animation must extends from this class.
  *
  * @since 1.0.0
- * @version 1.0.0
- * @example
- * import Animation from 'kittik-animation-basic';
- *
- * export default class Print extends Animation {
- *   animate(chunk, cb) {
- *     // Do your logic here for animate the shape rendering and call cb
- *     cb(chunk);
- *   }
- * };
  */
 export default class Basic {
   /**
-   * Initializes animation.
-   * Make sure that animation is disabled when instantiating.
+   * Creates animation class that has {@link animate} method for animating properties in the shape.
    *
+   * @param {Object} [options]
+   * @param {Number} [options.duration=500]
+   * @param {String} [options.easing='inQuad']
    * @constructor
    */
-  constructor(options) {
+  constructor(options = {}) {
+    this.EASING = EASING;
     this._options = options;
 
-    this.disable();
+    this.setDuration(options.duration);
+    this.setEasing(options.easing);
   }
 
   /**
@@ -34,7 +32,7 @@ export default class Basic {
    * @returns {*}
    */
   get(path) {
-    return path.split('.').reduce((obj, key) => obj[key], this._options);
+    return path.split('.').reduce((obj, key) => obj && obj[key], this._options);
   }
 
   /**
@@ -60,69 +58,123 @@ export default class Basic {
   }
 
   /**
-   * Enable animation.
+   * Get animation duration in ms.
+   *
+   * @returns {Number}
+   */
+  getDuration() {
+    return this.get('duration');
+  }
+
+  /**
+   * Set new animation duration in ms.
+   *
+   * @param {Number} [duration=500]
+   * @returns {Basic}
+   */
+  setDuration(duration = 500) {
+    return this.set('duration', duration);
+  }
+
+  /**
+   * Get easing name.
+   *
+   * @returns {String}
+   */
+  getEasing() {
+    return this.get('easing');
+  }
+
+  /**
+   * Set new easing for animation.
+   *
+   * @param {String} [easing='inQuad']
+   * @returns {Basic}
+   */
+  setEasing(easing = 'inQuad') {
+    return this.set('easing', easing);
+  }
+
+  /**
+   * Triggers before animation starts.
    *
    * @returns {Basic}
    */
-  enable() {
-    this.set('enabled', true);
+  onStart() {
     return this;
   }
 
   /**
-   * Disable animation.
+   * Triggers each time when some property is animated.
    *
+   * @param {Object} obj Object where property was animated
+   * @param {String} property Which property of this object was animated
+   * @param {Number} value New value of this property after animation
    * @returns {Basic}
    */
-  disable() {
-    this.set('enabled', false);
+  onTick(obj, property, value) {
     return this;
   }
 
   /**
-   * Check if animation is enabled.
+   * Triggers when animation is end.
    *
-   * @returns {Boolean}
+   * @returns {Basic}
    */
-  isEnabled() {
-    return !!this.get('enabled');
+  onEnd() {
+    return this;
   }
 
   /**
-   * Check if animation is disabled.
-   *
-   * @returns {Boolean}
-   */
-  isDisabled() {
-    return !this.get('enabled');
-  }
-
-  /**
-   * Main method where need to write animation logic.
+   * Method accepts shape and cursor instances.
    *
    * @abstract
-   * @param {Buffer|String} chunk One portion of control codes that is going to render in terminal
-   * @param {Function} cb Callback that accepts control codes piped to next item in the chain as an argument
-   * @example
-   * animate(chunk, cb) {
-   *   setTimeout(cb, 100, chunk); // Simple animation
-   * }
+   * @param {Shape} shape Shape instance that need to be animated
+   * @param {Cursor} cursor Cursor instance that you can use for rendering other stuff
    */
-  animate(chunk, cb) {
-    throw new Error('animate() method must be implemented');
+  animate(shape, cursor) {
+    throw new Error('You must implement animate() method');
   }
 
   /**
-   * Process each chunk of control symbols before piping into next item in the animations chain.
+   * Animates property in object.
+   * Each time when property animates, it triggers {@link onTick} method.
    *
-   * @param {Buffer|String} chunk
-   * @param {String} encoding
-   * @param {Function} cb
-   * @private
+   * @param {Object} options
+   * @param {Object} options.obj Target object where property is need to be animated
+   * @param {String} options.property Property name that need to be animated
+   * @param {Number} [options.startValue] Start value for animation, by default it takes from obj[property]
+   * @param {Number} [options.endValue] End value for animation, by default it 100
+   * @param {Number} [options.byValue] Step value for easing
+   * @param {Number} [options.duration] Duration of the animation in ms, by default it takes from Animation options
+   * @param {String} [options.easing] Easing that need to apply to animation, by default easing from Animation options
    */
-  _transform(chunk, encoding, cb) {
-    if (this.isEnabled()) return this.animate(chunk, cb.bind(this, null));
+  animateProperty(options = {}) {
+    let obj = options.obj;
+    let property = options.property;
+    let startValue = options.startValue || obj.get ? obj.get(property) : obj[property];
+    let endValue = options.endValue || 100;
+    let byValue = options.byValue || (endValue - startValue);
+    let duration = options.duration || this.getDuration();
+    let easing = options.easing || this.getEasing();
+    let delay = duration / (endValue - startValue);
+    let start = Date.now();
+    let end = start + duration;
 
-    cb(null, chunk);
+    this.onStart();
+
+    let interval = setInterval(() => {
+      let time = Date.now();
+      let currentTime = time > end ? duration : (time - start);
+
+      if (time > end) {
+        clearInterval(interval);
+        this.onEnd();
+      } else {
+        this.onTick(obj, property, Math.round(this.EASING[easing](currentTime, startValue, byValue, duration)));
+      }
+    }, delay);
+
+    return this;
   }
 }
