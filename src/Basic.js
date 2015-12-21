@@ -93,6 +93,7 @@ export default class Basic extends EventEmitter {
    * @returns {Basic}
    */
   setEasing(easing = 'outQuad') {
+    if (typeof this.EASING[easing] !== 'function') throw new Error(`Unknown easing: ${easing}`);
     return this.set('easing', easing);
   }
 
