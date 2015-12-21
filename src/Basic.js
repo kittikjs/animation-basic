@@ -1,6 +1,5 @@
+import EventEmitter from 'events';
 import { EASING } from './easing';
-
-export * from './easing';
 
 /**
  * Base class for creating other animations.
@@ -8,16 +7,18 @@ export * from './easing';
  *
  * @since 1.0.0
  */
-export default class Basic {
+export default class Basic extends EventEmitter {
   /**
    * Creates animation class that has {@link animate} method for animating properties in the shape.
    *
-   * @param {Object} [options]
-   * @param {Number} [options.duration=500]
-   * @param {String} [options.easing='inQuad']
    * @constructor
+   * @param {Object} [options]
+   * @param {Number} [options.duration=1000]
+   * @param {String} [options.easing='outQuad']
    */
   constructor(options = {}) {
+    super();
+
     this.EASING = EASING;
     this._options = options;
 
@@ -69,10 +70,10 @@ export default class Basic {
   /**
    * Set new animation duration in ms.
    *
-   * @param {Number} [duration=500]
+   * @param {Number} [duration=1000]
    * @returns {Basic}
    */
-  setDuration(duration = 500) {
+  setDuration(duration = 1000) {
     return this.set('duration', duration);
   }
 
@@ -88,41 +89,11 @@ export default class Basic {
   /**
    * Set new easing for animation.
    *
-   * @param {String} [easing='inQuad']
+   * @param {String} [easing='outQuad']
    * @returns {Basic}
    */
-  setEasing(easing = 'inQuad') {
+  setEasing(easing = 'outQuad') {
     return this.set('easing', easing);
-  }
-
-  /**
-   * Triggers before animation starts.
-   *
-   * @returns {Basic}
-   */
-  onStart() {
-    return this;
-  }
-
-  /**
-   * Triggers each time when some property is animated.
-   *
-   * @param {Object} obj Object where property was animated
-   * @param {String} property Which property of this object was animated
-   * @param {Number} value New value of this property after animation
-   * @returns {Basic}
-   */
-  onTick(obj, property, value) {
-    return this;
-  }
-
-  /**
-   * Triggers when animation is end.
-   *
-   * @returns {Basic}
-   */
-  onEnd() {
-    return this;
   }
 
   /**
@@ -138,10 +109,10 @@ export default class Basic {
 
   /**
    * Animates property in object.
-   * Each time when property animates, it triggers {@link onTick} method.
+   * Each time when property animates, it emits tick event.
    *
    * @param {Object} options
-   * @param {Object} options.obj Target object where property is need to be animated
+   * @param {Object} options.shape Target object where property is need to be animated
    * @param {String} options.property Property name that need to be animated
    * @param {Number} [options.startValue] Start value for animation, by default it takes from obj[property]
    * @param {Number} [options.endValue] End value for animation, by default it 100
@@ -150,30 +121,30 @@ export default class Basic {
    * @param {String} [options.easing] Easing that need to apply to animation, by default easing from Animation options
    */
   animateProperty(options = {}) {
-    let obj = options.obj;
-    let property = options.property;
-    let startValue = options.startValue || obj.get ? obj.get(property) : obj[property];
-    let endValue = options.endValue || 100;
-    let byValue = options.byValue || (endValue - startValue);
-    let duration = options.duration || this.getDuration();
-    let easing = options.easing || this.getEasing();
-    let delay = duration / (endValue - startValue);
-    let start = Date.now();
-    let end = start + duration;
+    const shape = options.shape;
+    const property = options.property;
+    const startValue = options.startValue || shape.get(property);
+    const endValue = options.endValue || 100;
+    const byValue = options.byValue || (endValue - startValue);
+    const duration = options.duration || this.getDuration();
+    const easing = options.easing || this.getEasing();
+    const delay = duration / (endValue - startValue);
+    const start = Date.now();
+    const end = start + duration;
 
-    this.onStart();
-
-    let interval = setInterval(() => {
+    setTimeout(function tick() {
       let time = Date.now();
       let currentTime = time > end ? duration : (time - start);
 
       if (time > end) {
-        clearInterval(interval);
-        this.onEnd();
+        this.emit('end', shape, property);
       } else {
-        this.onTick(obj, property, Math.round(this.EASING[easing](currentTime, startValue, byValue, duration)));
+        let newValue = Math.round(this.EASING[easing](currentTime, startValue, byValue, duration));
+        shape.set(property, newValue);
+        this.emit('tick', shape, property, newValue);
+        setTimeout(tick.bind(this), delay);
       }
-    }, delay);
+    }.bind(this), delay);
 
     return this;
   }
