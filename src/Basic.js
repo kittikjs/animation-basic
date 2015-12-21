@@ -121,7 +121,7 @@ export default class Basic extends EventEmitter {
    * @param {Number} [options.duration] Duration of the animation in ms, by default it takes from Animation options
    * @param {String} [options.easing] Easing that need to apply to animation, by default easing from Animation options
    */
-  animateProperty(options = {}) {
+  animateProperty(options) {
     const shape = options.shape;
     const property = options.property;
     const startValue = options.startValue || shape.get(property);
