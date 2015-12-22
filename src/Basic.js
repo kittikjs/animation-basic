@@ -16,7 +16,6 @@ export default class Basic {
    * @param {String} [options.easing='outQuad']
    */
   constructor(options = {}) {
-    this.EASING = EASING;
     this._options = options;
     this._onTickCallbacks = [];
 
@@ -91,7 +90,7 @@ export default class Basic {
    * @returns {Basic}
    */
   setEasing(easing = 'outQuad') {
-    if (typeof this.EASING[easing] !== 'function') throw new Error(`Unknown easing: ${easing}`);
+    if (typeof EASING[easing] !== 'function') throw new Error(`Unknown easing: ${easing}`);
     return this.set('easing', easing);
   }
 
@@ -102,7 +101,7 @@ export default class Basic {
    * @returns {Promise}
    */
   delay(ms) {
-    return new Promise((resolve, reject) => setTimeout(resolve, ms));
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   /**
@@ -132,26 +131,28 @@ export default class Basic {
    * @param {Cursor} cursor Cursor instance that you can use for rendering other stuff
    */
   animate(shape, cursor) {
-    throw new Error('You must implement animate() method');
+    return Promise.reject(new Error('You must implement animate() method'));
   }
 
   /**
-   * Animates property in object.
+   * Helper method that animates property in object.
+   * On each animation tick it calls {@link onTick} method with shape, property and newValue arguments.
    *
    * @param {Object} options
-   * @param {Object} options.shape Target object where property is need to be animated
+   * @param {Object} options.shape Shape where property is need to be animated
    * @param {String} options.property Property name that need to be animated
-   * @param {Number} [options.startValue] Start value for animation, by default it takes from obj[property]
-   * @param {Number} [options.endValue] End value for animation, by default it 100
+   * @param {Number} [options.startValue] Start value for animation, by default it takes from shape[property]
+   * @param {Number} [options.endValue] End value for animation, by default it takes from shape[property]
    * @param {Number} [options.byValue] Step value for easing
    * @param {Number} [options.duration] Duration of the animation in ms, by default it takes from Animation options
-   * @param {String} [options.easing] Easing that need to apply to animation, by default easing from Animation options
+   * @param {String} [options.easing] Easing that need to apply to animation, by default it takes from Animation options
+   * @returns {Promise} Returns Promise, that fulfills with shape instance that has been animated
    */
   animateProperty(options) {
     const shape = options.shape;
     const property = options.property;
     const startValue = options.startValue || shape.get(property);
-    const endValue = options.endValue || 100;
+    const endValue = options.endValue || shape.get(property);
     const byValue = options.byValue || (endValue - startValue);
     const duration = options.duration || this.getDuration();
     const easing = options.easing || this.getEasing();
@@ -159,13 +160,12 @@ export default class Basic {
     const start = Date.now();
     const end = start + duration;
     const tick = resolve => {
-      let time = Date.now();
-      let currentTime = time > end ? duration : (time - start);
+      let currentTime = Date.now();
 
-      if (time > end) {
-        resolve({shape, property});
+      if (currentTime > end) {
+        resolve(shape);
       } else {
-        this.onTick(shape, property, Math.round(this.EASING[easing](currentTime, startValue, byValue, duration)));
+        this.onTick(shape, property, Math.round(EASING[easing](currentTime - start, startValue, byValue, duration)));
         this.delay(delay).then(() => tick(resolve));
       }
     };
