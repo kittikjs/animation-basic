@@ -1,4 +1,3 @@
-import EventEmitter from 'events';
 import { EASING } from './easing';
 
 /**
@@ -7,7 +6,7 @@ import { EASING } from './easing';
  *
  * @since 1.0.0
  */
-export default class Basic extends EventEmitter {
+export default class Basic {
   /**
    * Creates animation class that has {@link animate} method for animating properties in the shape.
    *
@@ -17,10 +16,9 @@ export default class Basic extends EventEmitter {
    * @param {String} [options.easing='outQuad']
    */
   constructor(options = {}) {
-    super();
-
     this.EASING = EASING;
     this._options = options;
+    this._onTickCallbacks = [];
 
     this.setDuration(options.duration);
     this.setEasing(options.easing);
@@ -98,10 +96,39 @@ export default class Basic extends EventEmitter {
   }
 
   /**
+   * Makes delay.
+   *
+   * @param {Number} ms
+   * @returns {Promise}
+   */
+  delay(ms) {
+    return new Promise((resolve, reject) => setTimeout(resolve, ms));
+  }
+
+  /**
+   * Calls each time when animation ticked.
+   *
+   * @param {Basic|Function} shape
+   * @param {String} property
+   * @param {Number} value
+   * @returns {Basic}
+   */
+  onTick(shape, property, value) {
+    if (typeof shape === 'function') this._onTickCallbacks.push(shape);
+
+    if (typeof shape === 'object') {
+      shape.set(property, value);
+      this._onTickCallbacks.forEach(fn => fn(shape, property, value))
+    }
+
+    return this;
+  }
+
+  /**
    * Method accepts shape and cursor instances.
    *
    * @abstract
-   * @param {Shape} shape Shape instance that need to be animated
+   * @param {Basic} shape Shape instance that need to be animated
    * @param {Cursor} cursor Cursor instance that you can use for rendering other stuff
    */
   animate(shape, cursor) {
@@ -110,7 +137,6 @@ export default class Basic extends EventEmitter {
 
   /**
    * Animates property in object.
-   * Each time when property animates, it emits tick event.
    *
    * @param {Object} options
    * @param {Object} options.shape Target object where property is need to be animated
@@ -132,21 +158,18 @@ export default class Basic extends EventEmitter {
     const delay = duration / (endValue - startValue);
     const start = Date.now();
     const end = start + duration;
-
-    setTimeout(function tick() {
+    const tick = resolve => {
       let time = Date.now();
       let currentTime = time > end ? duration : (time - start);
 
       if (time > end) {
-        this.emit('end', shape, property);
+        resolve({shape, property});
       } else {
-        let newValue = Math.round(this.EASING[easing](currentTime, startValue, byValue, duration));
-        shape.set(property, newValue);
-        this.emit('tick', shape, property, newValue);
-        setTimeout(tick.bind(this), delay);
+        this.onTick(shape, property, Math.round(this.EASING[easing](currentTime, startValue, byValue, duration)));
+        this.delay(delay).then(() => tick(resolve));
       }
-    }.bind(this), delay);
+    };
 
-    return this;
+    return new Promise(resolve => tick(resolve));
   }
 }
