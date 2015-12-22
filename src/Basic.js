@@ -95,40 +95,48 @@ export default class Basic {
   }
 
   /**
-   * Makes delay.
+   * Makes delay before executing function.
    *
-   * @param {Number} ms
-   * @returns {Promise}
+   * @param {Number} ms Timeout in ms
+   * @returns {Promise} Returns Promise that fulfills when delay is over
    */
   delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   /**
-   * Calls each time when animation ticked.
+   * Calls each time when animation ticks.
    *
-   * @param {Basic|Function} shape
-   * @param {String} property
-   * @param {Number} value
+   * @param {Basic} shape Shape instance
+   * @param {String} property Property name of the shape
+   * @param {Number} value New value of the specified property
    * @returns {Basic}
    */
   onTick(shape, property, value) {
-    if (typeof shape === 'function') this._onTickCallbacks.push(shape);
-
-    if (typeof shape === 'object') {
-      shape.set(property, value);
-      this._onTickCallbacks.forEach(fn => fn(shape, property, value))
-    }
-
+    shape.set(property, value);
+    this._onTickCallbacks.forEach(fn => fn.apply(this, arguments));
     return this;
   }
 
   /**
-   * Method accepts shape and cursor instances.
+   * Method accepts function that triggers each time when animation tick proceed.
+   *
+   * @param {Function} fn Function accepts shape, property and newValue
+   * @returns {Basic}
+   */
+  whenTicks(fn) {
+    this._onTickCallbacks.push(fn);
+    return this;
+  }
+
+  /**
+   * Main method that calls every time when shape needs to be animated.
+   * This method must return Promise that fulfills with shape instance that has been animated.
    *
    * @abstract
    * @param {Basic} shape Shape instance that need to be animated
    * @param {Cursor} cursor Cursor instance that you can use for rendering other stuff
+   * @returns {Promise} Returns Promise that fulfills with shape instance when animation is done
    */
   animate(shape, cursor) {
     return Promise.reject(new Error('You must implement animate() method'));
@@ -143,10 +151,10 @@ export default class Basic {
    * @param {String} options.property Property name that need to be animated
    * @param {Number} [options.startValue] Start value for animation, by default it takes from shape[property]
    * @param {Number} [options.endValue] End value for animation, by default it takes from shape[property]
-   * @param {Number} [options.byValue] Step value for easing
+   * @param {Number} [options.byValue] Step value for easing, by default it calculates automatically
    * @param {Number} [options.duration] Duration of the animation in ms, by default it takes from Animation options
    * @param {String} [options.easing] Easing that need to apply to animation, by default it takes from Animation options
-   * @returns {Promise} Returns Promise, that fulfills with shape instance that has been animated
+   * @returns {Promise} Returns Promise, that fulfills with shape instance which has been animated
    */
   animateProperty(options) {
     const shape = options.shape;
