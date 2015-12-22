@@ -38,8 +38,41 @@ describe('Animation::Basic', () => {
     assert.throws(() => animation.setEasing('wrong'), Error, 'Unknown easing: wrong');
   });
 
+  it('Should properly make delay', done => {
+    let animation = new Animation();
+    animation.delay(1).then(() => {
+      done();
+    });
+  });
+
+  it('Should properly trigger onTick method when animates', done => {
+    let animation = new Animation();
+    let shape = new Rectangle();
+    let mock = sinon.mock(animation);
+
+    mock.expects('onTick').atLeast(60);
+
+    animation.animateProperty({shape: shape, property: 'x'}).then(() => {
+      mock.verify();
+      done();
+    });
+  });
+
+  it('Should properly accepts functions into whenTicks method', done => {
+    let animation = new Animation();
+    let shape = new Rectangle();
+    let onTick = sinon.spy();
+
+    animation.whenTicks(onTick);
+    animation.animateProperty({shape: shape, property: 'x'}).then(() => {
+      assert.isAbove(onTick.callCount, 60);
+      done();
+    });
+  });
+
   it('Should properly throw error when animate is not implemented', done => {
     let animation = new Animation();
+
     animation.animate().then(() => true).catch(error => {
       assert.instanceOf(error, Error);
       assert.equal(error.message, 'You must implement animate() method');
