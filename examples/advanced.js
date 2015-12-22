@@ -41,5 +41,5 @@ const playAnimation = index => {
   animation.animate(shapes[index], cursor).then(nextShape);
 };
 
-const animation = new Slide({duration: 2000}).onTick(onTick);
+const animation = new Slide({duration: 2000}).whenTicks(onTick);
 playAnimation(currentShapeIndex);

@@ -10,4 +10,4 @@ class Slide extends Animation {
   }
 }
 
-new Slide({duration: 2000}).onTick(shape => shape.render(cursor) && cursor.flush().eraseScreen()).animate(shape);
+new Slide({duration: 2000}).whenTicks(shape => shape.render(cursor) && cursor.flush().eraseScreen()).animate(shape);
