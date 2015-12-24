@@ -29,7 +29,7 @@
     "coveralls": "2.11.6",
     "cz-conventional-changelog": "1.1.5",
     "isparta": "4.0.0",
-    "kittik-cursor": "2.1.0",
+    "kittik-cursor": "2.2.0",
     "kittik-shape-rectangle": "1.0.4",
     "mocha": "2.3.4",
     "semantic-release": "4.3.5",
