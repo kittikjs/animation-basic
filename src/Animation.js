@@ -39,7 +39,7 @@ export default class Animation extends EventEmitter {
    *
    * @param {String} path Path can be set with dot-notation
    * @param {*} value Value that need to be written to the options object
-   * @returns {Basic}
+   * @returns {Animation}
    */
   set(path, value) {
     let obj = this;
@@ -69,7 +69,7 @@ export default class Animation extends EventEmitter {
    * Set new animation duration in ms.
    *
    * @param {Number} [duration=1000]
-   * @returns {Basic}
+   * @returns {Animation}
    */
   setDuration(duration = 1000) {
     return this.set('duration', duration);
@@ -88,7 +88,7 @@ export default class Animation extends EventEmitter {
    * Set new easing for animation.
    *
    * @param {String} [easing='outQuad']
-   * @returns {Basic}
+   * @returns {Animation}
    */
   setEasing(easing = 'outQuad') {
     if (typeof EASING[easing] !== 'function') throw new Error(`Unknown easing: ${easing}`);
@@ -108,10 +108,10 @@ export default class Animation extends EventEmitter {
   /**
    * Calls each time when animation ticks.
    *
-   * @param {Basic} shape Shape instance
+   * @param {Shape} shape Shape instance
    * @param {String} property Property name of the shape
    * @param {Number} value New value of the specified property
-   * @returns {Basic}
+   * @returns {Animation}
    */
   onTick(shape, property, value) {
     shape.set(property, value);
@@ -137,7 +137,7 @@ export default class Animation extends EventEmitter {
    * This method must return Promise that fulfills with shape instance that has been animated.
    *
    * @abstract
-   * @param {Basic} shape Shape instance that need to be animated
+   * @param {Shape} shape Shape instance that need to be animated
    * @param {Cursor} cursor Cursor instance that you can use for rendering other stuff
    * @returns {Promise} Returns Promise that fulfills with shape instance when animation is done
    */
