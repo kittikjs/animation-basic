@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import sinon from 'sinon';
 import Rectangle from 'kittik-shape-rectangle';
-import Animation from '../../src/Basic';
+import Animation from '../../src/Animation';
 
 describe('Animation::Basic', () => {
   it('Should properly create animation with custom options', () => {

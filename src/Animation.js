@@ -6,7 +6,7 @@ import { EASING } from './easing';
  *
  * @since 1.0.0
  */
-export default class Basic {
+export default class Animation {
   /**
    * Creates animation class that has {@link animate} method for animating properties in the shape.
    *
