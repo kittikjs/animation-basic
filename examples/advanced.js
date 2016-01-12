@@ -2,21 +2,25 @@
 
 const cursor = require('kittik-cursor').Cursor.create().resetTTY();
 const Rectangle = require('kittik-shape-rectangle').default;
-const Animation = require('../lib/Basic').default;
+const Animation = require('../lib/Animation').default;
 const shapes = [
-  Rectangle.create({background: cursor.COLORS.WHITE, x: 10, y: 20, text: 'Shape 1'}),
-  Rectangle.create({background: cursor.COLORS.DARK_BLUE, x: 60, y: 10, text: 'Shape 2'}),
-  Rectangle.create({background: cursor.COLORS.LIGHT_SKY_BLUE_1, x: 100, y: 30, text: 'Shape 3'}),
-  Rectangle.create({background: cursor.COLORS.RED, x: 1, y: 1, text: 'Shape 4'})
+  Rectangle.create({background: Math.floor(Math.random() * 255), x: 'left', y: 'top', text: 'Shape 1'}),
+  Rectangle.create({background: Math.floor(Math.random() * 255), x: 'center', y: 'top', text: 'Shape 2'}),
+  Rectangle.create({background: Math.floor(Math.random() * 255), x: 'right', y: 'top', text: 'Shape 3'}),
+  Rectangle.create({background: Math.floor(Math.random() * 255), x: 'left', y: 'middle', text: 'Shape 4'}),
+  Rectangle.create({background: Math.floor(Math.random() * 255), x: 'center', y: 'middle', text: 'Shape 5'}),
+  Rectangle.create({background: Math.floor(Math.random() * 255), x: 'right', y: 'middle', text: 'Shape 6'}),
+  Rectangle.create({background: Math.floor(Math.random() * 255), x: 'left', y: 'bottom', text: 'Shape 7'}),
+  Rectangle.create({background: Math.floor(Math.random() * 255), x: 'center', y: 'bottom', text: 'Shape 8'}),
+  Rectangle.create({background: Math.floor(Math.random() * 255), x: 'right', y: 'bottom', text: 'Shape 9'})
 ];
 
 // Your animation
 class Slide extends Animation {
   animate(shape, cursor) {
     return Promise.all([
-      this.animateProperty({shape: shape, easing: 'outBounce', property: 'x', endValue: Math.random() * 100 + 1}),
-      this.animateProperty({shape: shape, easing: 'outBounce', property: 'y', endValue: Math.random() * 30 + 1}),
-      this.animateProperty({shape: shape, property: 'background', endValue: Math.random() * 255})
+      this.animateProperty({shape: shape, property: 'x', startValue: Math.random() * 100 + 1, endValue: shape.getX()}),
+      this.animateProperty({shape: shape, property: 'y', startValue: Math.random() * 30 + 1, endValue: shape.getY()})
     ]).then(() => Promise.resolve(shape));
   }
 }
@@ -41,5 +45,5 @@ const playAnimation = index => {
   animation.animate(shapes[index], cursor).then(nextShape);
 };
 
-const animation = new Slide({duration: 2000}).whenTicks(onTick);
+const animation = new Slide({duration: 2000}).on('tick', onTick);
 playAnimation(currentShapeIndex);
