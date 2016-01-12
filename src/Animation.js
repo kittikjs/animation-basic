@@ -21,7 +21,6 @@ export default class Animation extends EventEmitter {
 
     this.setDuration(options.duration);
     this.setEasing(options.easing);
-
     this.on('tick', this.onTick);
   }
 
@@ -120,6 +119,20 @@ export default class Animation extends EventEmitter {
   }
 
   /**
+   * Triggers each time when easing calculates new value in time.
+   *
+   * @param {String} easing Easing name
+   * @param {Number} time Current time
+   * @param {Number} startValue Start value
+   * @param {Number} byValue Change in value
+   * @param {Number} duration Duration
+   * @returns {Number}
+   */
+  onEasing(easing, time, startValue, byValue, duration) {
+    return Math.round(EASING[easing](time, startValue, byValue, duration));
+  }
+
+  /**
    * Main method that calls every time when shape needs to be animated.
    * This method must return Promise that fulfills with shape instance that has been animated.
    *
@@ -163,7 +176,7 @@ export default class Animation extends EventEmitter {
       if (currentTime > end) {
         resolve(shape);
       } else {
-        this.emit('tick', shape, property, Math.round(EASING[easing](currentTime - start, startValue, byValue, duration)));
+        this.emit('tick', shape, property, this.onEasing(easing, currentTime - start, startValue, byValue, duration));
         this.delay(delay).then(() => tick(resolve));
       }
     };
