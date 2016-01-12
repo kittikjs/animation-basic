@@ -1,3 +1,4 @@
+import EventEmitter from 'events';
 import { EASING } from './easing';
 
 /**
@@ -6,7 +7,7 @@ import { EASING } from './easing';
  *
  * @since 1.0.0
  */
-export default class Animation {
+export default class Animation extends EventEmitter {
   /**
    * Creates animation class that has {@link animate} method for animating properties in the shape.
    *
@@ -16,11 +17,12 @@ export default class Animation {
    * @param {String} [options.easing='outQuad']
    */
   constructor(options = {}) {
-    this._options = options;
-    this._onTickCallbacks = [];
+    super();
 
     this.setDuration(options.duration);
     this.setEasing(options.easing);
+
+    this.on('tick', this.onTick);
   }
 
   /**
@@ -30,7 +32,7 @@ export default class Animation {
    * @returns {*}
    */
   get(path) {
-    return path.split('.').reduce((obj, key) => obj && obj[key], this._options);
+    return path.split('.').reduce((obj, key) => obj && obj[key], this);
   }
 
   /**
@@ -41,7 +43,7 @@ export default class Animation {
    * @returns {Basic}
    */
   set(path, value) {
-    let obj = this._options;
+    let obj = this;
     let tags = path.split('.');
     let len = tags.length - 1;
 
@@ -114,18 +116,6 @@ export default class Animation {
    */
   onTick(shape, property, value) {
     shape.set(property, value);
-    this._onTickCallbacks.forEach(fn => fn.apply(this, arguments));
-    return this;
-  }
-
-  /**
-   * Method accepts function that triggers each time when animation tick proceed.
-   *
-   * @param {Function} fn Function accepts shape, property and newValue
-   * @returns {Basic}
-   */
-  whenTicks(fn) {
-    this._onTickCallbacks.push(fn);
     return this;
   }
 
@@ -173,11 +163,11 @@ export default class Animation {
       if (currentTime > end) {
         resolve(shape);
       } else {
-        this.onTick(shape, property, Math.round(EASING[easing](currentTime - start, startValue, byValue, duration)));
+        this.emit('tick', shape, property, Math.round(EASING[easing](currentTime - start, startValue, byValue, duration)));
         this.delay(delay).then(() => tick(resolve));
       }
     };
 
-    return new Promise(resolve => tick(resolve));
+    return new Promise(tick);
   }
 }
