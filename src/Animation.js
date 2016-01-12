@@ -183,4 +183,63 @@ export default class Animation extends EventEmitter {
 
     return new Promise(tick);
   }
+
+  /**
+   * Serializes animation to the object representation.
+   *
+   * @returns {Object}
+   */
+  toObject() {
+    return {
+      type: this.constructor.name,
+      options: {
+        duration: this.get('duration'),
+        easing: this.get('easing')
+      }
+    }
+  }
+
+  /**
+   * Serializes animation to the JSON representation.
+   *
+   * @returns {JSON}
+   */
+  toJSON() {
+    return JSON.stringify(this.toObject());
+  }
+
+  /**
+   * Static wrapper around new Animation().
+   *
+   * @param args
+   * @returns {Animation}
+   */
+  static create(...args) {
+    return new this(...args);
+  }
+
+  /**
+   * Creates animation instance from the Object representation.
+   *
+   * @static
+   * @param {Object} obj Object from {@link toObject} method
+   * @returns {Animation}
+   */
+  static fromObject(obj) {
+    if (!obj.type || !obj.options) throw new Error(`It looks like the object is not a representation of the Animation`);
+    if (obj.type !== this.name) throw new Error(`${obj.type} is not an object representation of the ${this.name}`);
+
+    return this.create(obj.options);
+  }
+
+  /**
+   * Creates animation instance from the JSON representation.
+   *
+   * @static
+   * @param {JSON} json
+   * @returns {Animation}
+   */
+  static fromJSON(json) {
+    return this.fromObject(JSON.parse(json));
+  }
 }
