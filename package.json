@@ -2,7 +2,7 @@
   "name": "kittik-animation-basic",
   "version": "0.0.0-semantic-release",
   "description": "Basic animation which is needed for creating other animation",
-  "main": "lib/Basic.js",
+  "main": "lib/Animation.js",
   "author": "ghaiklor",
   "bugs": {
     "url": "https://github.com/kittikjs/animation-basic/issues"
