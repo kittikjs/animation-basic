@@ -66,12 +66,11 @@ export const EASING = {
 
   inElastic: (t, b, c, d) => {
     let s = 1.70158;
-    let p = 0;
+    let p = d * .3;
     let a = c;
 
     if (t == 0) return b;
     if ((t /= d) == 1) return b + c;
-    if (!p) p = d * .3;
     if (a < Math.abs(c)) {
       a = c;
       s = p / 4;
@@ -84,12 +83,11 @@ export const EASING = {
 
   outElastic: (t, b, c, d) => {
     let s = 1.70158;
-    let p = 0;
+    let p = d * .3;
     let a = c;
 
     if (t == 0) return b;
     if ((t /= d) == 1) return b + c;
-    if (!p) p = d * .3;
 
     if (a < Math.abs(c)) {
       a = c;
@@ -103,12 +101,11 @@ export const EASING = {
 
   inOutElastic: (t, b, c, d) => {
     let s = 1.70158;
-    let p = 0;
+    let p = d * (.3 * 1.5);
     let a = c;
 
     if (t == 0) return b;
     if ((t /= d / 2) == 2) return b + c;
-    if (!p) p = d * (.3 * 1.5);
     if (a < Math.abs(c)) {
       a = c;
       s = p / 4;
