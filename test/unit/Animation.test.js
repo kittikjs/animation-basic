@@ -55,7 +55,7 @@ describe('Animation::Basic', () => {
     animation.animateProperty({shape: shape, property: 'x', duration: 1}).then(() => {
       mock.verify();
       done();
-    }).catch(done);
+    });
   });
 
   it('Should properly trigger onEasing method when animates', done => {
@@ -68,13 +68,13 @@ describe('Animation::Basic', () => {
     animation.animateProperty({shape: shape, property: 'x', duration: 1}).then(() => {
       mock.verify();
       done();
-    }).catch(done);
+    });
   });
 
   it('Should properly throw error when animate() is not implemented', done => {
     let animation = new Animation();
 
-    animation.animate().then(() => true).catch(error => {
+    animation.animate().catch(error => {
       assert.instanceOf(error, Error);
       assert.equal(error.message, 'You must implement animate() method');
       done();
