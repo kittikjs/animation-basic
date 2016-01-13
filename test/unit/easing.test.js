@@ -54,6 +54,7 @@ describe('Animation::easing', () => {
     assert.isNumber(EASING.inBounce(0, 0, 0, 0));
     assert.isNumber(EASING.outBounce(1, 0, 0, 5));
     assert.isNumber(EASING.outBounce(0.7, 0, 0, 0));
+    assert.isNumber(EASING.outBounce(1463, 1, 110.5, 2000));
     assert.isNumber(EASING.outBounce(0.8, 0, 0, 0.001));
     assert.isNumber(EASING.inOutBounce(0, 0, 0, 0));
     assert.isNumber(EASING.inOutBounce(1, 0, 0, 5));
