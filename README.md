@@ -29,9 +29,14 @@ Extend and export your animation:
 import Animation from 'kittik-animation-basic';
 
 export default class Print extends Animation {
-  animate(chunk, cb) {
-    // Do your animation here and trigger cb
-    cb(chunk);
+  animate(shape, cursor) {
+    // shape is an instance of the Shape that need to animate
+    // cursor is a Cursor instance that you can use for your own purposes
+    // animate() method must return Promise that fullfils when animation is done
+    return Promise.all([
+      this.animateProperty({shape: shape, property: 'x', startValue: 1, endValue: shape.getX()});
+      this.animateProperty({shape: shape, property: 'y', startValue: 1, endValue: shape.getY()});
+    ]);
   }
 }
 ```
