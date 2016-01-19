@@ -1,6 +1,6 @@
 "use strict";
 
-const cursor = require('kittik-cursor').Cursor.create().resetTTY();
+const cursor = require('kittik-cursor').default.create().resetTTY();
 const shape = require('kittik-shape-rectangle').default.create({background: 'white', x: 'center'});
 const Animation = require('../lib/Animation').default;
 

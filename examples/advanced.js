@@ -1,18 +1,18 @@
 "use strict";
 
-const cursor = require('kittik-cursor').Cursor.create().resetTTY();
+const cursor = require('kittik-cursor').default.create().resetTTY();
 const Rectangle = require('kittik-shape-rectangle').default;
 const Animation = require('../lib/Animation').default;
 const shapes = [
-  Rectangle.create({background: Math.floor(Math.random() * 255), x: 'left', y: 'top', text: 'Shape 1'}),
-  Rectangle.create({background: Math.floor(Math.random() * 255), x: 'center', y: 'top', text: 'Shape 2'}),
-  Rectangle.create({background: Math.floor(Math.random() * 255), x: 'right', y: 'top', text: 'Shape 3'}),
-  Rectangle.create({background: Math.floor(Math.random() * 255), x: 'left', y: 'middle', text: 'Shape 4'}),
-  Rectangle.create({background: Math.floor(Math.random() * 255), x: 'center', y: 'middle', text: 'Shape 5'}),
-  Rectangle.create({background: Math.floor(Math.random() * 255), x: 'right', y: 'middle', text: 'Shape 6'}),
-  Rectangle.create({background: Math.floor(Math.random() * 255), x: 'left', y: 'bottom', text: 'Shape 7'}),
-  Rectangle.create({background: Math.floor(Math.random() * 255), x: 'center', y: 'bottom', text: 'Shape 8'}),
-  Rectangle.create({background: Math.floor(Math.random() * 255), x: 'right', y: 'bottom', text: 'Shape 9'})
+  Rectangle.create({background: 'dark_blue', x: 'left', y: 'top', text: 'Shape 1'}),
+  Rectangle.create({background: 'dark_blue', x: 'center', y: 'top', text: 'Shape 2'}),
+  Rectangle.create({background: 'dark_blue', x: 'right', y: 'top', text: 'Shape 3'}),
+  Rectangle.create({background: 'green', x: 'left', y: 'middle', text: 'Shape 4'}),
+  Rectangle.create({background: 'green', x: 'center', y: 'middle', text: 'Shape 5'}),
+  Rectangle.create({background: 'green', x: 'right', y: 'middle', text: 'Shape 6'}),
+  Rectangle.create({background: 'yellow_1', x: 'left', y: 'bottom', text: 'Shape 7'}),
+  Rectangle.create({background: 'yellow_1', x: 'center', y: 'bottom', text: 'Shape 8'}),
+  Rectangle.create({background: 'yellow_1', x: 'right', y: 'bottom', text: 'Shape 9'})
 ];
 
 // Your animation
