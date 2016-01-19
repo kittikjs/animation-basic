@@ -7,9 +7,9 @@ const shapes = [
   Rectangle.create({background: 'dark_blue', x: 'left', y: 'top', text: 'Shape 1'}),
   Rectangle.create({background: 'dark_blue', x: 'center', y: 'top', text: 'Shape 2'}),
   Rectangle.create({background: 'dark_blue', x: 'right', y: 'top', text: 'Shape 3'}),
-  Rectangle.create({background: 'green', x: 'left', y: 'middle', text: 'Shape 4'}),
-  Rectangle.create({background: 'green', x: 'center', y: 'middle', text: 'Shape 5'}),
-  Rectangle.create({background: 'green', x: 'right', y: 'middle', text: 'Shape 6'}),
+  Rectangle.create({background: 'navy_blue', x: 'left', y: 'middle', text: 'Shape 4'}),
+  Rectangle.create({background: 'navy_blue', x: 'center', y: 'middle', text: 'Shape 5'}),
+  Rectangle.create({background: 'navy_blue', x: 'right', y: 'middle', text: 'Shape 6'}),
   Rectangle.create({background: 'yellow_1', x: 'left', y: 'bottom', text: 'Shape 7'}),
   Rectangle.create({background: 'yellow_1', x: 'center', y: 'bottom', text: 'Shape 8'}),
   Rectangle.create({background: 'yellow_1', x: 'right', y: 'bottom', text: 'Shape 9'})
