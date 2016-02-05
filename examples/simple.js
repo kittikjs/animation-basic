@@ -1,8 +1,8 @@
 "use strict";
 
-const cursor = require('kittik-cursor').default.create().resetTTY();
-const shape = require('kittik-shape-rectangle').default.create({background: 'white', x: 'center'});
-const Animation = require('../lib/Animation').default;
+const cursor = require('kittik-cursor').create().resetTTY();
+const shape = require('kittik-shape-rectangle').create({background: 'white', x: 'center'});
+const Animation = require('../lib/Animation');
 
 class Slide extends Animation {
   animate(shape, cursor) {

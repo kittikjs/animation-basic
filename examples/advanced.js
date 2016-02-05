@@ -1,8 +1,8 @@
 "use strict";
 
-const cursor = require('kittik-cursor').default.create().resetTTY();
-const Rectangle = require('kittik-shape-rectangle').default;
-const Animation = require('../lib/Animation').default;
+const cursor = require('kittik-cursor').create().resetTTY();
+const Rectangle = require('kittik-shape-rectangle');
+const Animation = require('../lib/Animation');
 const shapes = [
   Rectangle.create({background: 'dark_blue', x: 'left', y: 'top', text: 'Shape 1'}),
   Rectangle.create({background: 'dark_blue', x: 'center', y: 'top', text: 'Shape 2'}),
