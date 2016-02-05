@@ -6,7 +6,11 @@ const Animation = require('../lib/Animation');
 
 class Slide extends Animation {
   animate(shape, cursor) {
-    return this.animateProperty({shape: shape, property: 'x', startValue: 1, endValue: shape.getX()});
+    return new Promise(resolve => {
+      this
+        .animateProperty({shape: shape, property: 'x', startValue: -shape.getWidth(), endValue: shape.getX()})
+        .then(shape => resolve(shape));
+    });
   }
 }
 

@@ -19,8 +19,8 @@ const shapes = [
 class Slide extends Animation {
   animate(shape, cursor) {
     return Promise.all([
-      this.animateProperty({shape: shape, property: 'x', startValue: Math.random() * 100 + 1, endValue: shape.getX()}),
-      this.animateProperty({shape: shape, property: 'y', startValue: Math.random() * 30 + 1, endValue: shape.getY()})
+      this.animateProperty({shape: shape, property: 'x', startValue: Math.random() * 100 - 50, endValue: shape.getX()}),
+      this.animateProperty({shape: shape, property: 'y', startValue: Math.random() * 30 - 15, endValue: shape.getY()})
     ]).then(() => Promise.resolve(shape));
   }
 }
