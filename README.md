@@ -33,10 +33,12 @@ export default class Print extends Animation {
     // shape is an instance of the Shape that need to animate
     // cursor is a Cursor instance that you can use for your own purposes
     // animate() method must return Promise that fullfils when animation is done
-    return Promise.all([
-      this.animateProperty({shape: shape, property: 'x', startValue: 1, endValue: shape.getX()});
-      this.animateProperty({shape: shape, property: 'y', startValue: 1, endValue: shape.getY()});
-    ]);
+    return new Promise(resolve => {
+      Promise.all([
+        this.animateProperty({shape: shape, property: 'x', startValue: 1, endValue: shape.getX()});
+        this.animateProperty({shape: shape, property: 'y', startValue: 1, endValue: shape.getY()});
+      ]).then(() => resolve(shape));
+    });
   }
 }
 ```
@@ -45,7 +47,7 @@ export default class Print extends Animation {
 
 The MIT License (MIT)
 
-Copyright (c) 2015 Eugene Obrezkov
+Copyright (c) 2015-2016 Eugene Obrezkov
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
