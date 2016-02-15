@@ -1,6 +1,6 @@
 "use strict";
 
-const cursor = require('kittik-cursor').create().resetTTY();
+const cursor = require('kittik-cursor').create().resetTTY().hideCursor();
 const Rectangle = require('kittik-shape-rectangle');
 const Animation = require('../lib/Animation');
 const shapes = [
@@ -38,6 +38,7 @@ const onTick = (shape, property, value) => {
 const nextShape = shape => {
   renderedShapes.push(shape);
   currentShapeIndex++;
+  if (currentShapeIndex == 9) cursor.showCursor().flush();
   playAnimation(currentShapeIndex);
 };
 

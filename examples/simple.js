@@ -1,6 +1,6 @@
 "use strict";
 
-const cursor = require('kittik-cursor').create().resetTTY();
+const cursor = require('kittik-cursor').create().resetTTY().hideCursor();
 const shape = require('kittik-shape-rectangle').create({background: 'white', x: 'center'});
 const Animation = require('../lib/Animation');
 
@@ -14,4 +14,4 @@ class Slide extends Animation {
   }
 }
 
-new Slide({duration: 2000}).on('tick', shape => shape.render(cursor) && cursor.flush().eraseScreen()).animate(shape);
+new Slide({duration: 2000}).on('tick', shape => shape.render(cursor) && cursor.flush().eraseScreen()).animate(shape).then(() => cursor.showCursor().flush());
