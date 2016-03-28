@@ -30,9 +30,10 @@ let renderedShapes = [];
 let currentShapeIndex = 0;
 
 const onTick = (shape, property, value) => {
-  renderedShapes.forEach(shape => shape.render(cursor));
-  shape.render(cursor);
-  cursor.flush().eraseScreen();
+  cursor.eraseScreen();
+  renderedShapes.forEach(shape => shape.render());
+  shape.render();
+  cursor.flush();
 };
 
 const nextShape = shape => {

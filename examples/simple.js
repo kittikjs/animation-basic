@@ -6,12 +6,10 @@ const Animation = require('../lib/Animation');
 
 class Slide extends Animation {
   animate(shape) {
-    return new Promise(resolve => {
-      this
-        .animateProperty({shape: shape, property: 'x', startValue: -shape.getWidth(), endValue: shape.getX()})
-        .then(shape => resolve(shape));
-    });
+    return this.animateProperty({shape: shape, property: 'x', startValue: -shape.getWidth(), endValue: shape.getX()});
   }
 }
 
-new Slide({duration: 2000}).on('tick', shape => shape.render() && cursor.flush().eraseScreen()).animate(shape).then(() => cursor.showCursor().flush());
+new Slide({duration: 2000})
+  .on('tick', shape => cursor.eraseScreen() && shape.render() && cursor.flush())
+  .animate(shape).then(() => cursor.showCursor().flush());
