@@ -151,8 +151,8 @@ export default class Animation extends EventEmitter {
    * @param {Object} options
    * @param {Object} options.shape Shape where property is need to be animated
    * @param {String} options.property Property name that need to be animated
-   * @param {Number} [options.startValue] Start value for animation, by default it takes from shape[property]
-   * @param {Number} [options.endValue] End value for animation, by default it takes from shape[property]
+   * @param {Number} options.startValue Start value for animation, by default it takes from shape[property]
+   * @param {Number} options.endValue End value for animation, by default it takes from shape[property]
    * @param {Number} [options.byValue] Step value for easing, by default it calculates automatically
    * @param {Number} [options.duration] Duration of the animation in ms, by default it takes from Animation options
    * @param {String} [options.easing] Easing that need to apply to animation, by default it takes from Animation options
@@ -161,8 +161,8 @@ export default class Animation extends EventEmitter {
   animateProperty(options) {
     const shape = options.shape;
     const property = options.property;
-    const startValue = options.startValue || shape.get(property);
-    const endValue = options.endValue || shape.get(property);
+    const startValue = options.startValue;
+    const endValue = options.endValue;
     const byValue = options.byValue || (endValue - startValue);
     const duration = options.duration || this.getDuration();
     const easing = options.easing || this.getEasing();
