@@ -28,8 +28,8 @@ Extend and export your animation:
 ```javascript
 import Animation from 'kittik-animation-basic';
 
-export default class Print extends Animation {
-  animate(shape, cursor) {
+export default class Slide extends Animation {
+  animate(shape) {
     // shape is an instance of the Shape that need to animate
     // cursor is a Cursor instance that you can use for your own purposes
     // animate() method must return Promise that fullfils when animation is done
