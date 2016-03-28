@@ -1,4 +1,4 @@
-import { assert } from 'chai';
+import {assert} from 'chai';
 import sinon from 'sinon';
 import Rectangle from 'kittik-shape-rectangle';
 import Animation from '../../src/Animation';

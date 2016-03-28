@@ -1,5 +1,5 @@
-import { assert } from 'chai';
-import { EASING } from '../../src/easing';
+import {assert} from 'chai';
+import {EASING} from '../../src/easing';
 
 describe('Animation::easing', () => {
   it('Should properly export easing', () => {
