@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import { EASING } from './easing';
+import {EASING} from './easing';
 
 /**
  * Base class for creating other animations.
@@ -138,10 +138,9 @@ export default class Animation extends EventEmitter {
    *
    * @abstract
    * @param {Shape} shape Shape instance that need to be animated
-   * @param {Cursor} cursor Cursor instance that you can use for rendering other stuff
    * @returns {Promise} Returns Promise that fulfills with shape instance when animation is done
    */
-  animate(shape, cursor) {
+  animate(shape) {
     return Promise.reject(new Error('You must implement animate() method'));
   }
 
@@ -171,7 +170,7 @@ export default class Animation extends EventEmitter {
     const start = Date.now();
     const end = start + duration;
     const tick = resolve => {
-      let currentTime = Date.now();
+      const currentTime = Date.now();
 
       if (currentTime > end) {
         resolve(shape);
