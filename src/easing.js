@@ -1,5 +1,8 @@
 /**
- * Dictionary of all available easing.
+ * Dictionary of all available easings for {@link Animation}.
+ * You can use it as `easing` option in all of the animations.
+ *
+ * @type {Object}
  */
 export const EASING = {
   inQuad: (t, b, c, d) => c * (t /= d) * t + b,

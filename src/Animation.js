@@ -5,6 +5,7 @@ import {EASING} from './easing';
  * Base class for creating other animations.
  * Each custom animation must extends from this class.
  *
+ * @extends {EventEmitter}
  * @since 1.0.0
  */
 export default class Animation extends EventEmitter {
@@ -12,9 +13,14 @@ export default class Animation extends EventEmitter {
    * Creates animation class that has {@link animate} method for animating properties in the shape.
    *
    * @constructor
-   * @param {Object} [options]
-   * @param {Number} [options.duration=1000]
-   * @param {String} [options.easing='outQuad']
+   * @param {Object} [options] Options object
+   * @param {Number} [options.duration=1000] Duration of the animation in ms
+   * @param {String} [options.easing='outQuad'] Easing name from {@link EASING} dictionary
+   * @example
+   * Animation.create({
+   *   duration: 5000,
+   *   easing: 'outElastic'
+   * });
    */
   constructor(options = {}) {
     super();
@@ -29,6 +35,8 @@ export default class Animation extends EventEmitter {
    *
    * @param {String} path Path can be set with dot-notation
    * @returns {*}
+   * @example
+   * animation.get('my.value.from.object');
    */
   get(path) {
     return path.split('.').reduce((obj, key) => obj && obj[key], this);
@@ -40,6 +48,8 @@ export default class Animation extends EventEmitter {
    * @param {String} path Path can be set with dot-notation
    * @param {*} value Value that need to be written to the options object
    * @returns {Animation}
+   * @example
+   * animation.set('my.value.from.object', 'value');
    */
   set(path, value) {
     let obj = this;
@@ -68,7 +78,7 @@ export default class Animation extends EventEmitter {
   /**
    * Set new animation duration in ms.
    *
-   * @param {Number} [duration=1000]
+   * @param {Number} [duration=1000] Duration of the animation in ms
    * @returns {Animation}
    */
   setDuration(duration = 1000) {
@@ -87,7 +97,7 @@ export default class Animation extends EventEmitter {
   /**
    * Set new easing for animation.
    *
-   * @param {String} [easing='outQuad']
+   * @param {String} [easing='outQuad'] Easing name from {@link EASING} dictionary
    * @returns {Animation}
    */
   setEasing(easing = 'outQuad') {
@@ -106,7 +116,7 @@ export default class Animation extends EventEmitter {
   }
 
   /**
-   * Calls each time when animation ticks.
+   * Triggers each time when animation ticks.
    *
    * @param {Shape} shape Shape instance
    * @param {String} property Property name of the shape
@@ -139,6 +149,8 @@ export default class Animation extends EventEmitter {
    * @abstract
    * @param {Shape} shape Shape instance that need to be animated
    * @returns {Promise} Returns Promise that fulfills with shape instance when animation is done
+   * @fulfil {Shape} If method is implemented, it should fulfil the Promise with a Shape instance
+   * @reject {Error} If method is not overridden rejects the Promise with an Error
    */
   animate(shape) {
     return Promise.reject(new Error('You must implement animate() method'));
@@ -147,16 +159,18 @@ export default class Animation extends EventEmitter {
   /**
    * Helper method that animates property in object.
    * On each animation tick it calls {@link onTick} method with shape, property and newValue arguments.
+   * Also, you can subscribe in your childes to `tick` event and do your own stuff.
    *
-   * @param {Object} options
-   * @param {Object} options.shape Shape where property is need to be animated
+   * @param {Object} options Options object
+   * @param {Shape} options.shape Shape where property is need to be animated
    * @param {String} options.property Property name that need to be animated
-   * @param {Number} options.startValue Start value for animation, by default it takes from shape[property]
-   * @param {Number} options.endValue End value for animation, by default it takes from shape[property]
+   * @param {Number} options.startValue Start value for animation
+   * @param {Number} options.endValue End value for animation
    * @param {Number} [options.byValue] Step value for easing, by default it calculates automatically
    * @param {Number} [options.duration] Duration of the animation in ms, by default it takes from Animation options
    * @param {String} [options.easing] Easing that need to apply to animation, by default it takes from Animation options
    * @returns {Promise} Returns Promise, that fulfills with shape instance which has been animated
+   * @fulfil {Shape} When animation is done, fulfils with Shape instance
    */
   animateProperty(options) {
     const shape = options.shape;
@@ -210,6 +224,7 @@ export default class Animation extends EventEmitter {
   /**
    * Static wrapper around new Animation().
    *
+   * @static
    * @param args
    * @returns {Animation}
    */
@@ -223,6 +238,7 @@ export default class Animation extends EventEmitter {
    * @static
    * @param {Object} obj Object from {@link toObject} method
    * @returns {Animation}
+   * @throws {Error} If object is not a representation of {@link Animation}
    */
   static fromObject(obj) {
     if (!obj.type || !obj.options) throw new Error(`It looks like the object is not a representation of the Animation`);
@@ -235,7 +251,7 @@ export default class Animation extends EventEmitter {
    * Creates animation instance from the JSON representation.
    *
    * @static
-   * @param {JSON} json
+   * @param {JSON} json JSON from {@link toJSON} method
    * @returns {Animation}
    */
   static fromJSON(json) {
