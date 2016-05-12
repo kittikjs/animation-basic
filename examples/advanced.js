@@ -4,15 +4,15 @@ const cursor = require('kittik-cursor').create().reset().hideCursor();
 const Rectangle = require('kittik-shape-rectangle');
 const Animation = require('../lib/Animation');
 const shapes = [
-  Rectangle.create(cursor, {background: 'blue', x: 'left', y: 'top', text: 'Shape 1'}),
-  Rectangle.create(cursor, {background: 'blue', x: 'center', y: 'top', text: 'Shape 2'}),
-  Rectangle.create(cursor, {background: 'blue', x: 'right', y: 'top', text: 'Shape 3'}),
-  Rectangle.create(cursor, {background: 'green', x: 'left', y: 'middle', text: 'Shape 4'}),
-  Rectangle.create(cursor, {background: 'green', x: 'center', y: 'middle', text: 'Shape 5'}),
-  Rectangle.create(cursor, {background: 'green', x: 'right', y: 'middle', text: 'Shape 6'}),
-  Rectangle.create(cursor, {background: 'yellow', x: 'left', y: 'bottom', text: 'Shape 7'}),
-  Rectangle.create(cursor, {background: 'yellow', x: 'center', y: 'bottom', text: 'Shape 8'}),
-  Rectangle.create(cursor, {background: 'yellow', x: 'right', y: 'bottom', text: 'Shape 9'})
+  Rectangle.create(cursor, {background: 'dark_blue', x: 'left', y: 'top', text: 'Shape 1'}),
+  Rectangle.create(cursor, {background: 'dark_blue', x: 'center', y: 'top', text: 'Shape 2'}),
+  Rectangle.create(cursor, {background: 'dark_blue', x: 'right', y: 'top', text: 'Shape 3'}),
+  Rectangle.create(cursor, {background: 'dark_green', x: 'left', y: 'middle', text: 'Shape 4'}),
+  Rectangle.create(cursor, {background: 'dark_green', x: 'center', y: 'middle', text: 'Shape 5'}),
+  Rectangle.create(cursor, {background: 'dark_green', x: 'right', y: 'middle', text: 'Shape 6'}),
+  Rectangle.create(cursor, {background: 'dark_red', x: 'left', y: 'bottom', text: 'Shape 7'}),
+  Rectangle.create(cursor, {background: 'dark_red', x: 'center', y: 'bottom', text: 'Shape 8'}),
+  Rectangle.create(cursor, {background: 'dark_red', x: 'right', y: 'bottom', text: 'Shape 9'})
 ];
 
 // Your animation
